@@ -1,32 +1,19 @@
 // notificationResolvers.js
 const Notification = require('../models/Notification');
+const notificationService = require('../services/notificationService');
 
 module.exports = {
-    Query: {
-        getNotificationsByUser: async (_, { userId }) =>
-            await Notification.find({ recipient: userId }).sort({ createdAt: -1 }),
 
-        getNotification: async (_, { id }) =>
-            await Notification.findById(id)
+    getNotificationsByUser: async ({ userId }) => {
+        return await notificationService.getNotificationsByUser(userId);
     },
 
-    Mutation: {
-        addNotification: async (_, { input }) => {
-            const notification = new Notification(input);
-            return await notification.save();
-        },
+    addNotification: async ({ input }) => {
+        return await notificationService.addNotification(input);
+    },
 
-        markNotificationAsRead: async (_, { id }) => {
-            return await Notification.findByIdAndUpdate(
-                id,
-                { isRead: true },
-                { new: true }
-            );
-        },
+    markNotificationAsRead: async ({ id }) => {
+        return await notificationService.markNotificationAsRead(id);
+    },
 
-        deleteNotification: async (_, { id }) => {
-            await Notification.findByIdAndDelete(id);
-            return true;
-        }
-    }
 };

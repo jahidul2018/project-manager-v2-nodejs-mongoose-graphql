@@ -15,8 +15,17 @@ const adminOnlyMutation = roleCheck('admin')(async (_, args, context) => {
 
 });
 
+// with pubsub for real-time updates
+const { pubsub, EVENTS } = require('../pubsub');
+
+addTask: async ({ input }) => {
+    const task = await taskService.createTask(input);
+    pubsub.publish(EVENTS.TASK.CREATED, { taskCreated: task });
+    return task;
+}
 
 
+// 
 module.exports = {
     Query: {
         getTasksByProject: async (_, { projectId }) =>

@@ -1,0 +1,52 @@
+# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# dotenv environment variables
+.env
+.env.*.local
+
+# Test coverage and test output
+coverage/
+test-output/
+
+# Logs
+logs/
+*.log
+*.csv
+*.out
+*.pid
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# OS/system files
+.DS_Store
+Thumbs.db
+
+# IDE/editor specific
+.vscode/
+.idea/
+*.sw?
+*.sublime*
+
+# Build and output
+dist/
+build/
+tmp/
+temp/
+
+# MongoDB dump
+dump/
+*.mongodb
+
+# Optional
+*.tgz
+*.gz
+*.zip
+*.tar

@@ -1,25 +1,16 @@
 // activityResolvers.js
 const Activity = require('../models/Activity');
+const activityService = require('../services/activityService');
 
 module.exports = {
-    Query: {
-        getActivitiesByProject: async (_, { projectId }) =>
-            await Activity.find({ projectId }).populate('user').sort({ createdAt: -1 }),
 
-        getActivity: async (_, { id }) =>
-            await Activity.findById(id).populate('user')
+    getActivitiesByProject: async ({ projectId }) => {
+        return await activityService.getActivitiesByProject(projectId);
     },
 
-    Mutation: {
-        addActivity: async (_, { input }) => {
-            const activity = new Activity(input);
-            return await activity.save();
-        },
+    addActivity: async ({ input }) => {
+        return await activityService.addActivity(input);
+    },
 
-        deleteActivity: async (_, { id }) => {
-            await Activity.findByIdAndDelete(id);
-            return true;
-        }
-    }
 };
 

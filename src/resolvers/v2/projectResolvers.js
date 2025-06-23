@@ -1,26 +1,28 @@
 // projectResolvers.js
 const Project = require('../models/Project');
 const User = require('../models/User');
+const projectService = require('../../services/projectService');
 
 module.exports = {
-    Query: {
-        getProjects: async () => await Project.find().populate('owner members'),
-        getProject: async (_, { id }) => await Project.findById(id).populate('owner members')
+
+    getProject: async ({ id }) => {
+        return await projectService.getProjectById(id);
     },
 
-    Mutation: {
-        addProject: async (_, { input }) => {
-            const project = new Project(input);
-            return await project.save();
-        },
+    getProjects: async () => {
+        return await projectService.getProjects();
+    },
 
-        updateProject: async (_, { id, input }) => {
-            return await Project.findByIdAndUpdate(id, input, { new: true });
-        },
+    addProject: async ({ input }) => {
+        return await projectService.createProject(input);
+    },
 
-        deleteProject: async (_, { id }) => {
-            await Project.findByIdAndDelete(id);
-            return true;
-        }
-    }
+    // Query: {
+
+    // },
+
+    // Mutation: {
+
+    // }
+
 };

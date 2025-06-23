@@ -1,37 +1,36 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
+const userService = require('../services/userService');
 
 module.exports = {
-    Query: {
-        getUsers: async () => await User.find(),
-        getUser: async (_, { id }) => await User.findById(id)
+
+    registerUser: async ({ input }) => {
+        return await userService.createUser(input);
     },
 
-    Mutation: {
-        registerUser: async (_, { input }) => {
-            const hashedPassword = await bcrypt.hash(input.password, 10);
-            const user = new User({ ...input, password: hashedPassword });
-            return await user.save();
-        },
+    login: async ({ input }) => {
+        const user = await userService.findUserByEmail(input.email);
+        if (!user) throw new Error('User not found');
 
-        login: async (_, { input }) => {
-            const user = await User.findOne({ email: input.email });
-            if (!user) throw new Error('User not found');
+        const valid = await userService.comparePasswords(input.password, user.password);
+        if (!valid) throw new Error('Incorrect password');
 
-            const isMatch = await bcrypt.compare(input.password, user.password);
-            if (!isMatch) throw new Error('Invalid credentials');
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-                expiresIn: '1d'
-            });
+        return { token, user };
+    },
 
-            return { token, user };
-        },
+    getUsers: async () => {
+        return await userService.getAllUsers?.() || [];
+    },
 
-        deleteUser: async (_, { id }) => {
-            await User.findByIdAndDelete(id);
-            return true;
-        }
-    }
+    // Query: {
+
+    // },
+
+    // Mutation: {
+
+    // }
 };

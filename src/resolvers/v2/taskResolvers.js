@@ -1,5 +1,6 @@
 // taskResolvers.js
 const Task = require('../models/Task');
+const taskService = require('../../services/taskService');
 
 const { pubsub, EVENTS } = require('../pubsub');
 
@@ -45,3 +46,15 @@ module.exports = {
         }
     }
 };
+
+// getTask: async ({ id }) => {
+//     return await taskService.getTaskById(id);
+// },
+
+//     getTasksByProject: async ({ projectId }) => {
+//         return await taskService.getTasksByProject(projectId);
+//     },
+
+//         addTask: async ({ input }) => {
+//             return await taskService.createTask(input);
+//         },

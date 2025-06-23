@@ -1,28 +1,14 @@
 // subtaskResolvers.js
 const Subtask = require('../models/Subtask');
+const subtaskService = require('../../services/subtaskService');
 
 module.exports = {
-    Query: {
-        getSubtasksByTask: async (_, { taskId }) =>
-            await Subtask.find({ taskId }).populate('assignedTo'),
 
-        getSubtask: async (_, { id }) =>
-            await Subtask.findById(id).populate('assignedTo')
+    getSubtasksByTask: async ({ taskId }) => {
+        return await subtaskService.getSubtasksByTask(taskId);
     },
 
-    Mutation: {
-        addSubtask: async (_, { input }) => {
-            const subtask = new Subtask(input);
-            return await subtask.save();
-        },
-
-        updateSubtask: async (_, { id, input }) => {
-            return await Subtask.findByIdAndUpdate(id, input, { new: true });
-        },
-
-        deleteSubtask: async (_, { id }) => {
-            await Subtask.findByIdAndDelete(id);
-            return true;
-        }
-    }
+    addSubtask: async ({ input }) => {
+        return await subtaskService.createSubtask(input);
+    },
 };
